@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 def fetch_proxies():
     urls = [
         "https://free-proxy-list.net/",
+        "https://www.us-proxy.org/"
     ]
     proxies = []
     for url in urls:
@@ -41,3 +42,15 @@ print(f"Total proxies fetched: {len(proxy_list)}")
 with open('free_proxies.csv', 'w', encoding='utf-8') as file:
     for proxy in proxy_list:
         file.write(proxy + '\n')
+def test_proxies(proxies):
+    test_url = "http://httpbin.org/ip"
+    for proxy in proxies:
+        try:
+            response = requests.get(test_url, proxies={"https": proxy, "https": proxy}, timeout=5)
+            if response.status_code == 200:
+                print(f"Proxy {proxy} is working.")
+            else:
+                print(f"Proxy {proxy} failed with status code {response.status_code}.")
+        except requests.RequestException as e:
+            print(f"Proxy {proxy} failed: {e}")
+test_proxies(proxy_list)
